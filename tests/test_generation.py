@@ -27,9 +27,11 @@ def test_format_context():
         ),
     ]
     ctx = format_context(chunks)
-    assert "[Chunk chunk-1]" in ctx
+    assert "[Chunk 1]" in ctx
+    assert "ID: chunk-1" in ctx
     assert "Source: arch.pdf, Page 2" in ctx
-    assert "[Chunk chunk-2]" in ctx
+    assert "[Chunk 2]" in ctx
+    assert "ID: chunk-2" in ctx
 
 
 def test_generation_with_citations():

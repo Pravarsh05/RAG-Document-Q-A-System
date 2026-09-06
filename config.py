@@ -38,7 +38,7 @@ class Settings(BaseSettings):
     EMBEDDING_DEVICE: str = "cpu"
 
     # Re-ranker
-    RERANKER_MODEL: str = "cross-encoder/ms-marco-MiniLM-L-6-v2"
+    RERANKER_MODEL: str = "cross-encoder/ms-marco-MiniLM-L6-v2"
     RERANKER_DEVICE: str = "cpu"
 
     # Ingestion Defaults

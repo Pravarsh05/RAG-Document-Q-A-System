@@ -197,7 +197,7 @@ export function QueryPage() {
               citations: newCitations,
               retrievedChunks: newRetrieved,
               latencyMs: res.latencyMs || 0,
-              latencyDetails: (res as any).latency_ms,
+              latencyDetails: res.latency_ms,
               mode: res.retrievalMode,
               modelName: res.modelName,
               cached: res.cached,
@@ -261,12 +261,12 @@ export function QueryPage() {
   ): ReactNode => {
     if (typeof content === "string") {
       // Matches [1], [2], [Chunk 1], or [Chunk 377998fc-3a44-4d6c-bd73-548d8e3bc861]
-      const citationRegex = /(\[(?:Chunk\s+)?(?:[a-f0-9\-]{8,}|[0-9]+)\])/gi;
+      const citationRegex = /(\[(?:Chunk\s+)?(?:[a-f0-9-]{8,}|[0-9]+)\])/gi;
       const parts = content.split(citationRegex);
       if (parts.length === 1) return content;
 
       return parts.map((part, i) => {
-        const match = part.match(/\[(?:Chunk\s+)?([a-f0-9\-]{8,}|[0-9]+)\]/i);
+        const match = part.match(/\[(?:Chunk\s+)?([a-f0-9-]{8,}|[0-9]+)\]/i);
         if (match) {
           const rawToken = match[1].trim();
           let matchedChunk: SourceChunk | undefined;
@@ -277,7 +277,7 @@ export function QueryPage() {
           } else {
             // UUID or ID match
             matchedChunk = citations.find(
-              (c) => c.id === rawToken || (c as any).chunk_id === rawToken || c.id.startsWith(rawToken)
+              (c) => c.id === rawToken || c.chunk_id === rawToken || c.id.startsWith(rawToken)
             );
           }
 
@@ -753,7 +753,7 @@ export function QueryPage() {
 
           {ask.isError && (
             <div className="rounded-lg border border-rose-500/40 bg-rose-500/10 p-4 font-mono text-xs text-rose-400 shadow-sm">
-              {(ask.error as any)?.name === "AbortError"
+              {ask.error instanceof Error && ask.error.name === "AbortError"
                 ? "Query was cancelled by user."
                 : (ask.error as Error).message || "Query failed. Ensure FastAPI backend is running on port 8000."}
             </div>

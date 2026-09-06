@@ -17,6 +17,7 @@ export interface DocumentSummary {
 
 export interface SourceChunk {
   id: string;
+  chunk_id?: string;
   documentId: string;
   documentName: string;
   page?: number;
@@ -37,7 +38,7 @@ export interface DocumentChunk {
   start_char?: number;
   end_char?: number;
   chunking_strategy: string;
-  chunk_metadata?: Record<string, any>;
+  chunk_metadata?: Record<string, unknown>;
 }
 
 export interface QueryResponse {
@@ -47,6 +48,7 @@ export interface QueryResponse {
   retrievedChunks?: SourceChunk[];
   retrievalMode: RetrievalMode;
   latencyMs: number;
+  latency_ms?: Record<string, number>;
   modelName?: string;
   cached?: boolean;
 }
