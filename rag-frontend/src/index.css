@@ -1,0 +1,41 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    color-scheme: dark;
+  }
+  body {
+    @apply bg-ink-950 text-mist-100 font-body antialiased selection:bg-lexical/30 selection:text-mist-100;
+  }
+  /* Visible keyboard focus everywhere, per accessibility floor. */
+  :focus-visible {
+    outline: 2px solid theme("colors.lexical.DEFAULT");
+    outline-offset: 2px;
+  }
+
+  /* Custom Sleek Scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #0A0C11;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #242D40;
+    border-radius: 3px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #333F58;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}

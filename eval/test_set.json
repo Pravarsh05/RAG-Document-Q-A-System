@@ -1,0 +1,37 @@
+[
+  {
+    "id": "q1",
+    "question": "What are the primary chunking strategies compared in this project?",
+    "document_filename": "example_architecture.md",
+    "expected_keywords": ["fixed-size", "sentence-based", "semantic chunking", "overlap"],
+    "ground_truth_answer": "The project compares fixed-size chunking, sentence-based chunking, and hierarchical semantic chunking with configurable overlap."
+  },
+  {
+    "id": "q2",
+    "question": "Why does this system use hybrid search instead of pure vector search?",
+    "document_filename": "example_architecture.md",
+    "expected_keywords": ["keyword matches", "exact", "bm25", "vector", "misses"],
+    "ground_truth_answer": "Pure vector search frequently misses exact keyword matches and specific identifiers, so hybrid search combines dense vector embeddings with sparse BM25 keyword matching via Reciprocal Rank Fusion."
+  },
+  {
+    "id": "q3",
+    "question": "What cross-encoder model is used for re-ranking candidates?",
+    "document_filename": "example_architecture.md",
+    "expected_keywords": ["cross-encoder", "ms-marco-MiniLM", "reorders", "candidates"],
+    "ground_truth_answer": "The re-ranking layer uses the cross-encoder/ms-marco-MiniLM model to score query-passage pairs and reorder candidate chunks before LLM generation."
+  },
+  {
+    "id": "q4",
+    "question": "What database extension is used for HNSW vector indexing?",
+    "document_filename": "example_architecture.md",
+    "expected_keywords": ["pgvector", "postgres", "hnsw", "indexing"],
+    "ground_truth_answer": "The system utilizes pgvector on PostgreSQL with HNSW indexing for approximate nearest neighbor vector similarity search."
+  },
+  {
+    "id": "q5",
+    "question": "How does the system enforce citations during LLM generation?",
+    "document_filename": "example_architecture.md",
+    "expected_keywords": ["cite", "chunk", "prompt", "grounded", "source"],
+    "ground_truth_answer": "The LLM is prompted with strict instructions to ground its response exclusively in provided chunks and cite every claim using [Chunk ID] brackets."
+  }
+]
