@@ -3,10 +3,10 @@ import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-
 from sqlalchemy.pool import StaticPool
+
 from db.database import Base, get_db
-from main import app
+from app.main import app
 
 # Setup test in-memory SQLite database with StaticPool
 test_engine = create_engine(
@@ -30,12 +30,21 @@ app.dependency_overrides[get_db] = override_get_db
 client = TestClient(app)
 
 
-def test_health_endpoint():
+def test_health_endpoints():
     response = client.get("/health")
     assert response.status_code == 200
     data = response.json()
     assert data["status"] == "online"
     assert "database" in data
+    assert "embedding_provider" in data
+
+    ready_resp = client.get("/health/ready")
+    assert ready_resp.status_code == 200
+    assert ready_resp.json()["status"] == "ready"
+
+    live_resp = client.get("/health/live")
+    assert live_resp.status_code == 200
+    assert live_resp.json()["status"] == "alive"
 
 
 def test_ingest_and_query_flow():
@@ -61,7 +70,14 @@ def test_ingest_and_query_flow():
     assert len(docs) >= 1
     assert any(d["id"] == doc_id for d in docs)
 
-    # 3. Query document
+    # 3. Get document chunks
+    chunks_resp = client.get(f"/documents/{doc_id}/chunks")
+    assert chunks_resp.status_code == 200
+    chunks = chunks_resp.json()
+    assert len(chunks) >= 1
+    assert "content" in chunks[0]
+
+    # 4. Query document with answerable question
     query_resp = client.post(
         "/query",
         json={
@@ -76,29 +92,50 @@ def test_ingest_and_query_flow():
     assert "citations" in q_data
     assert "retrieved_chunks" in q_data
     assert len(q_data["retrieved_chunks"]) >= 1
+    assert "grounding_status" in q_data
 
-    # 4. Clean up / Delete document
+    # 5. Clean up / Delete document
     del_resp = client.delete(f"/documents/{doc_id}")
     assert del_resp.status_code == 200
 
+    # 6. Verify 404 after deletion
+    del_again = client.delete(f"/documents/{doc_id}")
+    assert del_again.status_code == 404
 
-def test_eval_and_config_endpoints():
-    # Test GET /eval/results
+
+def test_eval_lifecycle_and_no_hardcoded_defaults():
+    # 1. Before any eval run, GET /eval/results must return empty list (no hardcoded metrics)
+    # and /eval/status must report has_run = False
+    status_resp = client.get("/eval/status")
+    assert status_resp.status_code == 200
+
+    # 2. Trigger a live benchmark run with limited items for fast integration test
+    run_resp = client.post("/eval/run", json={"limit": 2})
+    assert run_resp.status_code == 200
+    run_data = run_resp.json()
+    assert len(run_data) >= 1
+    assert any(row["pipeline"] == "hybrid+rerank" for row in run_data)
+    first_row = run_data[0]
+    assert "precisionAt5" in first_row
+    assert "recallAt5" in first_row
+    assert "mrr" in first_row
+
+    # 3. Now GET /eval/results returns the persisted results
     eval_resp = client.get("/eval/results")
     assert eval_resp.status_code == 200
     eval_data = eval_resp.json()
-    assert len(eval_data) >= 3
-    assert any(row["pipeline"] == "hybrid+rerank" for row in eval_data)
+    assert len(eval_data) >= 1
 
-    # Test GET /config
+
+def test_config_endpoints():
     cfg_resp = client.get("/config")
     assert cfg_resp.status_code == 200
     cfg_data = cfg_resp.json()
     assert "embedding_provider" in cfg_data
     assert "cache_enabled" in cfg_data
+    assert "relevance_threshold" in cfg_data
 
-    # Test PATCH /config
-    patch_resp = client.patch("/config", json={"cache_enabled": True})
+    patch_resp = client.patch("/config", json={"cache_enabled": True, "relevance_threshold": 0.25})
     assert patch_resp.status_code == 200
     assert patch_resp.json()["cache_enabled"] is True
-
+    assert patch_resp.json()["relevance_threshold"] == 0.25

@@ -75,6 +75,29 @@ export function EvalPage() {
         </div>
       )}
 
+      {/* Empty State when no evaluation run has occurred */}
+      {!isLoading && (!rows || rows.length === 0) && (
+        <div className="mt-10 rounded-xl border border-dashed border-ink-700 bg-ink-900/40 p-10 text-center">
+          <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-xl border border-lexical/30 bg-lexical/10 text-lexical">
+            <BarChart3 className="h-6 w-6" />
+          </div>
+          <h3 className="font-display text-base font-semibold text-mist-100">
+            No Benchmark Evaluation Executed Yet
+          </h3>
+          <p className="mx-auto mt-2 max-w-md font-body text-xs text-mist-400 leading-relaxed">
+            All fabricated and hardcoded evaluation defaults have been eliminated. Click <strong>"Run Live Evaluation"</strong> above to execute the empirical benchmark across multi-domain ground-truth test pairs.
+          </p>
+          <button
+            onClick={handleRun}
+            disabled={runEval.isPending}
+            className="mt-5 inline-flex items-center gap-2 rounded-md bg-gradient-to-r from-lexical to-amber-500 px-4 py-2 font-mono text-xs font-bold text-ink-950 hover:brightness-110 cursor-pointer shadow-glow-lexical"
+          >
+            <Play className="h-3.5 w-3.5" />
+            <span>Execute 100-Item Ground-Truth Benchmark</span>
+          </button>
+        </div>
+      )}
+
       {rows && rows.length > 0 && (
         <div className="mt-6 space-y-6">
           {/* KPI Highlight Summary Cards */}
@@ -88,7 +111,7 @@ export function EvalPage() {
                 {(topPrecision * 100).toFixed(0)}%
               </div>
               <div className="mt-1 flex items-center gap-1 font-body text-xs text-mist-400">
-                <TrendingUp className="h-3 w-3 text-ok" /> Hybrid + Cross-Encoder
+                <TrendingUp className="h-3 w-3 text-ok" /> Cross-Encoder Reranked
               </div>
             </div>
 
@@ -114,7 +137,7 @@ export function EvalPage() {
                 {(topFaithfulness * 100).toFixed(0)}%
               </div>
               <div className="mt-1 flex items-center gap-1 font-body text-xs text-mist-400">
-                <Sparkles className="h-3 w-3 text-hybrid" /> Zero Hallucinations
+                <Sparkles className="h-3 w-3 text-hybrid" /> Verified Grounded
               </div>
             </div>
           </div>
@@ -126,7 +149,7 @@ export function EvalPage() {
                 <BarChart3 className="h-4 w-4 text-mist-300" />
                 <span>Comparative Metrics by Retrieval Pipeline</span>
               </div>
-              <span className="text-mist-400/80">Benchmark Evaluation Dataset</span>
+              <span className="text-mist-400/80">Empirical Ground-Truth Run</span>
             </div>
             <ResponsiveContainer width="100%" height={280}>
               <BarChart data={rows}>
@@ -168,36 +191,52 @@ export function EvalPage() {
             <strong className="text-lexical font-semibold">Architecture Insight:</strong> Hybrid search combining dense embeddings with sparse BM25 achieves superior recall across exact keyword terminology, while Cross-Encoder re-ranking achieves maximum precision@5 and citation fidelity.
           </div>
 
-          {/* Tabular breakdown */}
+          {/* Comprehensive Tabular breakdown */}
           <div className="overflow-x-auto rounded-lg border border-ink-800 bg-ink-900/60 shadow-card">
             <table className="w-full border-collapse font-body text-sm">
               <thead>
                 <tr className="border-b border-ink-700 bg-ink-900 text-left font-mono text-[11px] uppercase tracking-wide text-mist-400">
                   <th className="py-3 px-4 font-medium">Pipeline</th>
-                  <th className="py-3 px-3 font-medium text-right">Precision@5</th>
-                  <th className="py-3 px-3 font-medium text-right">Recall@5</th>
-                  <th className="py-3 px-3 font-medium text-right">Faithfulness</th>
-                  <th className="py-3 px-3 font-medium text-right">Relevance</th>
-                  <th className="py-3 px-4 font-medium text-right">Avg Latency</th>
+                  <th className="py-3 px-2 font-medium text-right">P@5</th>
+                  <th className="py-3 px-2 font-medium text-right">R@1</th>
+                  <th className="py-3 px-2 font-medium text-right">R@5</th>
+                  <th className="py-3 px-2 font-medium text-right">MRR</th>
+                  <th className="py-3 px-2 font-medium text-right">nDCG@5</th>
+                  <th className="py-3 px-2 font-medium text-right">Faithful</th>
+                  <th className="py-3 px-2 font-medium text-right">Cite OK</th>
+                  <th className="py-3 px-2 font-medium text-right">Refusal</th>
+                  <th className="py-3 px-3 font-medium text-right">Avg Latency</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-ink-850">
                 {rows.map((row) => (
                   <tr key={row.pipeline} className="transition-colors hover:bg-ink-850/60">
                     <td className="py-3 px-4 font-medium text-mist-100 font-mono text-xs">{row.pipeline}</td>
-                    <td className="py-3 px-3 font-mono text-xs text-right text-lexical font-semibold">
+                    <td className="py-3 px-2 font-mono text-xs text-right text-lexical font-semibold">
                       {(row.precisionAt5 * 100).toFixed(0)}%
                     </td>
-                    <td className="py-3 px-3 font-mono text-xs text-right text-vector font-semibold">
+                    <td className="py-3 px-2 font-mono text-xs text-right text-mist-300">
+                      {row.recallAt1 != null ? `${(row.recallAt1 * 100).toFixed(0)}%` : "--"}
+                    </td>
+                    <td className="py-3 px-2 font-mono text-xs text-right text-vector font-semibold">
                       {(row.recallAt5 * 100).toFixed(0)}%
                     </td>
-                    <td className="py-3 px-3 font-mono text-xs text-right text-hybrid font-semibold">
+                    <td className="py-3 px-2 font-mono text-xs text-right text-mist-200">
+                      {row.mrr != null ? row.mrr.toFixed(3) : "--"}
+                    </td>
+                    <td className="py-3 px-2 font-mono text-xs text-right text-mist-200">
+                      {row.ndcgAt5 != null ? row.ndcgAt5.toFixed(3) : "--"}
+                    </td>
+                    <td className="py-3 px-2 font-mono text-xs text-right text-hybrid font-semibold">
                       {(row.faithfulness * 100).toFixed(0)}%
                     </td>
-                    <td className="py-3 px-3 font-mono text-xs text-right text-mist-300">
-                      {row.relevance ? `${(row.relevance * 100).toFixed(0)}%` : "--"}
+                    <td className="py-3 px-2 font-mono text-xs text-right text-ok">
+                      {row.citationCorrectness != null ? `${(row.citationCorrectness * 100).toFixed(0)}%` : "--"}
                     </td>
-                    <td className="py-3 px-4 font-mono text-xs text-right text-mist-400">
+                    <td className="py-3 px-2 font-mono text-xs text-right text-mist-300">
+                      {row.refusalAccuracy != null ? `${(row.refusalAccuracy * 100).toFixed(0)}%` : "--"}
+                    </td>
+                    <td className="py-3 px-3 font-mono text-xs text-right text-mist-400">
                       {row.avgLatencyMs ? `${row.avgLatencyMs}ms` : "--"}
                     </td>
                   </tr>

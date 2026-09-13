@@ -1,3 +1,4 @@
-from eval.run_eval import run_evaluation, compute_metrics_for_query
+"""Evaluation package: metrics, benchmarking harness, and optimization experiments."""
+from eval.metrics import compute_retrieval_metrics, compute_generation_metrics
 
-__all__ = ["run_evaluation", "compute_metrics_for_query"]
+__all__ = ["compute_retrieval_metrics", "compute_generation_metrics"]

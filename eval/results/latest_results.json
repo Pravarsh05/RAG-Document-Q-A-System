@@ -1,0 +1,59 @@
+{
+  "run_id": "eval_20260913_150359_ffcef6",
+  "timestamp": "2026-09-13T15:03:59.765019+00:00",
+  "dataset_name": "Enterprise RAG Ground-Truth Benchmark",
+  "dataset_size": 2,
+  "has_run": true,
+  "results": [
+    {
+      "pipeline": "vector-only",
+      "precisionAt5": 0.5,
+      "recallAt5": 1.0,
+      "faithfulness": 1.0,
+      "relevance": 0.99,
+      "avgLatencyMs": 4267.9,
+      "recallAt1": 1.0,
+      "recallAt3": 1.0,
+      "mrr": 1.0,
+      "ndcgAt5": 0.933,
+      "citationCorrectness": 1.0,
+      "unsupportedClaimRate": 0.0,
+      "refusalAccuracy": 1.0
+    },
+    {
+      "pipeline": "hybrid",
+      "precisionAt5": 0.6,
+      "recallAt5": 1.0,
+      "faithfulness": 1.0,
+      "relevance": 0.99,
+      "avgLatencyMs": 33.4,
+      "recallAt1": 1.0,
+      "recallAt3": 1.0,
+      "mrr": 1.0,
+      "ndcgAt5": 0.913,
+      "citationCorrectness": 1.0,
+      "unsupportedClaimRate": 0.0,
+      "refusalAccuracy": 1.0
+    },
+    {
+      "pipeline": "hybrid+rerank",
+      "precisionAt5": 0.6,
+      "recallAt5": 1.0,
+      "faithfulness": 1.0,
+      "relevance": 0.99,
+      "avgLatencyMs": 6784.3,
+      "recallAt1": 1.0,
+      "recallAt3": 1.0,
+      "mrr": 1.0,
+      "ndcgAt5": 0.91,
+      "citationCorrectness": 1.0,
+      "unsupportedClaimRate": 0.0,
+      "refusalAccuracy": 1.0
+    }
+  ],
+  "summary": {
+    "top_precision_pipeline": "hybrid",
+    "top_recall_pipeline": "vector-only",
+    "dataset_items_evaluated": 2
+  }
+}

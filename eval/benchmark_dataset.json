@@ -1,0 +1,1474 @@
+[
+  {
+    "id": "fact_01",
+    "question": "What chunking strategies are implemented in the document ingestion pipeline?",
+    "category": "factual",
+    "is_answerable": true,
+    "target_documents": [
+      "example_architecture.md"
+    ],
+    "expected_keywords": [
+      "fixed-size",
+      "sentence-based",
+      "hierarchical semantic"
+    ],
+    "ground_truth_answer": "The pipeline implements fixed-size chunking, sentence-based chunking, and hierarchical semantic chunking."
+  },
+  {
+    "id": "fact_02",
+    "question": "Which dense embedding model is used for generating 384-dimensional vector embeddings?",
+    "category": "factual",
+    "is_answerable": true,
+    "target_documents": [
+      "example_architecture.md"
+    ],
+    "expected_keywords": [
+      "bge-small-en-v1.5",
+      "baai",
+      "384"
+    ],
+    "ground_truth_answer": "The system uses BAAI/bge-small-en-v1.5 generating 384-dimensional dense vectors."
+  },
+  {
+    "id": "fact_03",
+    "question": "What cross-encoder model is used to re-rank candidate chunks?",
+    "category": "factual",
+    "is_answerable": true,
+    "target_documents": [
+      "example_architecture.md"
+    ],
+    "expected_keywords": [
+      "cross-encoder/ms-marco-MiniLM-L-6-v2",
+      "re-ranking"
+    ],
+    "ground_truth_answer": "The system uses cross-encoder/ms-marco-MiniLM-L-6-v2 for re-ranking candidates."
+  },
+  {
+    "id": "fact_04",
+    "question": "What vector indexing technique is used in pgvector on PostgreSQL?",
+    "category": "factual",
+    "is_answerable": true,
+    "target_documents": [
+      "example_architecture.md",
+      "database_indexing_guide.md"
+    ],
+    "expected_keywords": [
+      "pgvector",
+      "hnsw",
+      "hierarchical navigable small world"
+    ],
+    "ground_truth_answer": "The system uses pgvector with HNSW (Hierarchical Navigable Small World) indexing."
+  },
+  {
+    "id": "fact_05",
+    "question": "Why does the architecture combine BM25 search with dense vector search?",
+    "category": "factual",
+    "is_answerable": true,
+    "target_documents": [
+      "example_architecture.md"
+    ],
+    "expected_keywords": [
+      "pure vector search frequently misses",
+      "exact keyword",
+      "sparse bm25",
+      "rrf"
+    ],
+    "ground_truth_answer": "Pure vector search frequently misses exact keywords and identifiers, so BM25 is merged via Reciprocal Rank Fusion."
+  },
+  {
+    "id": "fact_06",
+    "question": "What memory eviction policy is configured for the Redis distributed cache?",
+    "category": "factual",
+    "is_answerable": true,
+    "target_documents": [
+      "distributed_cache_spec.md"
+    ],
+    "expected_keywords": [
+      "volatile-lru",
+      "eviction",
+      "defragmentation"
+    ],
+    "ground_truth_answer": "The Redis cache uses the volatile-lru memory eviction policy."
+  },
+  {
+    "id": "fact_07",
+    "question": "What atomic counter in Redis is incremented to invalidate query cache entries?",
+    "category": "factual",
+    "is_answerable": true,
+    "target_documents": [
+      "distributed_cache_spec.md"
+    ],
+    "expected_keywords": [
+      "rag:index_version",
+      "incremented",
+      "invalidation"
+    ],
+    "ground_truth_answer": "The atomic counter rag:index_version is incremented on ingestion or deletion to invalidate the cache."
+  },
+  {
+    "id": "fact_08",
+    "question": "What distance metric is used as the default for normalized unit embeddings in PostgreSQL?",
+    "category": "factual",
+    "is_answerable": true,
+    "target_documents": [
+      "database_indexing_guide.md"
+    ],
+    "expected_keywords": [
+      "cosine distance",
+      "<=>",
+      "normalized"
+    ],
+    "ground_truth_answer": "Cosine Distance (<=>) is the default distance operator for normalized unit vectors."
+  },
+  {
+    "id": "fact_09",
+    "question": "What is the maximum allowed file upload size in the security policy?",
+    "category": "factual",
+    "is_answerable": true,
+    "target_documents": [
+      "security_compliance_policy.md"
+    ],
+    "expected_keywords": [
+      "10 megabytes",
+      "10mb",
+      "413"
+    ],
+    "ground_truth_answer": "The maximum allowed file upload size is 10 Megabytes (MB)."
+  },
+  {
+    "id": "fact_10",
+    "question": "What magic bytes signature must PDF files begin with?",
+    "category": "factual",
+    "is_answerable": true,
+    "target_documents": [
+      "security_compliance_policy.md"
+    ],
+    "expected_keywords": [
+      "%pdf-",
+      "magic",
+      "signature"
+    ],
+    "ground_truth_answer": "PDF files must begin with the %PDF- header signature."
+  },
+  {
+    "id": "fact_11",
+    "question": "How are client rate limits coordinated across instances?",
+    "category": "factual",
+    "is_answerable": true,
+    "target_documents": [
+      "distributed_cache_spec.md"
+    ],
+    "expected_keywords": [
+      "sliding-window",
+      "redis sorted sets",
+      "zset",
+      "120 requests"
+    ],
+    "ground_truth_answer": "Rate limiting uses a distributed sliding-window counter backed by Redis sorted sets (ZSET)."
+  },
+  {
+    "id": "fact_12",
+    "question": "What prefix is required for API keys under the security architecture?",
+    "category": "factual",
+    "is_answerable": true,
+    "target_documents": [
+      "security_compliance_policy.md"
+    ],
+    "expected_keywords": [
+      "rag_sec_",
+      "hexadecimal",
+      "32 cryptographic"
+    ],
+    "ground_truth_answer": "API keys must be prefixed with rag_sec_ followed by 32 cryptographic random bytes."
+  },
+  {
+    "id": "fact_13",
+    "question": "What is the default TTL for standard query cache entries in Redis?",
+    "category": "factual",
+    "is_answerable": true,
+    "target_documents": [
+      "distributed_cache_spec.md"
+    ],
+    "expected_keywords": [
+      "3600 seconds",
+      "1 hour",
+      "ttl"
+    ],
+    "ground_truth_answer": "The default TTL for standard query cache entries is 3600 seconds (1 hour)."
+  },
+  {
+    "id": "fact_14",
+    "question": "What algorithm connects nodes in the HNSW vector graph?",
+    "category": "factual",
+    "is_answerable": true,
+    "target_documents": [
+      "database_indexing_guide.md"
+    ],
+    "expected_keywords": [
+      "multi-layer graph",
+      "nearest neighbors",
+      "bi-directional"
+    ],
+    "ground_truth_answer": "HNSW constructs a multi-layer graph of nearest neighbors with bi-directional connection links."
+  },
+  {
+    "id": "fact_15",
+    "question": "What file formats are officially supported for document ingestion?",
+    "category": "factual",
+    "is_answerable": true,
+    "target_documents": [
+      "security_compliance_policy.md"
+    ],
+    "expected_keywords": [
+      ".pdf",
+      ".md",
+      ".markdown",
+      ".html",
+      ".htm",
+      ".txt"
+    ],
+    "ground_truth_answer": "The supported formats are PDF, Markdown (.md, .markdown), HTML (.html, .htm), and plain text (.txt)."
+  },
+  {
+    "id": "fact_16",
+    "question": "What happens when retrieved evidence falls below the relevance threshold?",
+    "category": "factual",
+    "is_answerable": true,
+    "target_documents": [
+      "security_compliance_policy.md"
+    ],
+    "expected_keywords": [
+      "refusal",
+      "insufficient_evidence",
+      "relevance_threshold"
+    ],
+    "ground_truth_answer": "The system returns an explicit refusal status 'insufficient_evidence' without generating an answer."
+  },
+  {
+    "id": "fact_17",
+    "question": "How are citations formatted in LLM generation responses?",
+    "category": "factual",
+    "is_answerable": true,
+    "target_documents": [
+      "example_architecture.md"
+    ],
+    "expected_keywords": [
+      "[chunk id]",
+      "bracketed",
+      "grounded"
+    ],
+    "ground_truth_answer": "Citations must use bracketed chunk indices like [1], [2], or [Chunk ID] directly beside claims."
+  },
+  {
+    "id": "fact_18",
+    "question": "What operator represents L2 Euclidean distance in pgvector?",
+    "category": "factual",
+    "is_answerable": true,
+    "target_documents": [
+      "database_indexing_guide.md"
+    ],
+    "expected_keywords": [
+      "<->",
+      "l2",
+      "euclidean"
+    ],
+    "ground_truth_answer": "L2 Euclidean Distance is represented by the <-> operator."
+  },
+  {
+    "id": "fact_19",
+    "question": "What replication configuration is specified for the Redis cluster?",
+    "category": "factual",
+    "is_answerable": true,
+    "target_documents": [
+      "distributed_cache_spec.md"
+    ],
+    "expected_keywords": [
+      "3-node replication",
+      "1 primary",
+      "2 read replicas"
+    ],
+    "ground_truth_answer": "The cluster uses 3-node replication with 1 primary node and 2 read replicas."
+  },
+  {
+    "id": "fact_20",
+    "question": "What HTTP status code is returned when a client exceeds the request rate limit?",
+    "category": "factual",
+    "is_answerable": true,
+    "target_documents": [
+      "distributed_cache_spec.md"
+    ],
+    "expected_keywords": [
+      "429",
+      "too many requests",
+      "retry-after"
+    ],
+    "ground_truth_answer": "HTTP 429 Too Many Requests is returned with a Retry-After header."
+  },
+  {
+    "id": "fact_21",
+    "question": "What chunk size is used for streaming upload reading to prevent memory exhaustion?",
+    "category": "factual",
+    "is_answerable": true,
+    "target_documents": [
+      "security_compliance_policy.md"
+    ],
+    "expected_keywords": [
+      "64 kilobyte",
+      "64 kb",
+      "stream"
+    ],
+    "ground_truth_answer": "Uploads are read in 64 Kilobyte chunks with running size accumulation."
+  },
+  {
+    "id": "fact_22",
+    "question": "Why does HNSW perform better than IVFFlat during real-time data ingestion?",
+    "category": "factual",
+    "is_answerable": true,
+    "target_documents": [
+      "database_indexing_guide.md"
+    ],
+    "expected_keywords": [
+      "no clustering pre-training",
+      "incremental",
+      "real-time"
+    ],
+    "ground_truth_answer": "HNSW requires no clustering pre-training and allows incremental real-time vector insertions."
+  },
+  {
+    "id": "fact_23",
+    "question": "What header is used to pass request correlation IDs through the middleware?",
+    "category": "factual",
+    "is_answerable": true,
+    "target_documents": [
+      "security_compliance_policy.md"
+    ],
+    "expected_keywords": [
+      "x-request-id",
+      "correlation",
+      "header"
+    ],
+    "ground_truth_answer": "The X-Request-ID header is used to trace requests across the API."
+  },
+  {
+    "id": "fact_24",
+    "question": "What distance operator represents inner product in pgvector?",
+    "category": "factual",
+    "is_answerable": true,
+    "target_documents": [
+      "database_indexing_guide.md"
+    ],
+    "expected_keywords": [
+      "<#>",
+      "inner product"
+    ],
+    "ground_truth_answer": "The <#> operator represents inner product distance in pgvector."
+  },
+  {
+    "id": "fact_25",
+    "question": "How is tenant isolation maintained in document storage?",
+    "category": "factual",
+    "is_answerable": true,
+    "target_documents": [
+      "security_compliance_policy.md"
+    ],
+    "expected_keywords": [
+      "user_id",
+      "tenant_id",
+      "partitioned"
+    ],
+    "ground_truth_answer": "Every document and chunk is tagged with a user_id or tenant_id to partition data."
+  },
+  {
+    "id": "sem_01",
+    "question": "How does the document ingestion layer split continuous text into smaller passages without breaking up sentences?",
+    "category": "semantic",
+    "is_answerable": true,
+    "target_documents": [
+      "example_architecture.md"
+    ],
+    "expected_keywords": [
+      "sentence-based chunking",
+      "grammatical",
+      "boundaries"
+    ],
+    "ground_truth_answer": "Sentence-based chunking respects natural grammatical boundaries so ideas remain coherent."
+  },
+  {
+    "id": "sem_02",
+    "question": "What mechanism guarantees that stale answers are never served after an administrator uploads a new PDF?",
+    "category": "semantic",
+    "is_answerable": true,
+    "target_documents": [
+      "distributed_cache_spec.md"
+    ],
+    "expected_keywords": [
+      "rag:index_version",
+      "increment",
+      "invalidation"
+    ],
+    "ground_truth_answer": "The atomic counter rag:index_version is incremented on ingestion, invalidating older cache keys."
+  },
+  {
+    "id": "sem_03",
+    "question": "In what way does the re-ranking layer enhance candidate ordering before sending context to the language model?",
+    "category": "semantic",
+    "is_answerable": true,
+    "target_documents": [
+      "example_architecture.md"
+    ],
+    "expected_keywords": [
+      "cross-encoder",
+      "self-attention",
+      "reorders"
+    ],
+    "ground_truth_answer": "The cross-encoder jointly computes self-attention between query and passage to score and reorder candidates."
+  },
+  {
+    "id": "sem_04",
+    "question": "Why is cosine distance chosen over Euclidean distance for embedding lookups in this platform?",
+    "category": "semantic",
+    "is_answerable": true,
+    "target_documents": [
+      "database_indexing_guide.md"
+    ],
+    "expected_keywords": [
+      "cosine distance",
+      "normalized",
+      "unit vectors"
+    ],
+    "ground_truth_answer": "Cosine distance (<=>) is optimal because the dense vector embeddings are normalized to unit length."
+  },
+  {
+    "id": "sem_05",
+    "question": "How does the system prevent hostile clients from saturating memory with oversized file uploads?",
+    "category": "semantic",
+    "is_answerable": true,
+    "target_documents": [
+      "security_compliance_policy.md"
+    ],
+    "expected_keywords": [
+      "10 megabytes",
+      "64 kilobyte",
+      "bounded stream"
+    ],
+    "ground_truth_answer": "It enforces a 10MB limit and streams incoming files in 64KB chunks, rejecting oversized payloads."
+  },
+  {
+    "id": "sem_06",
+    "question": "What structural elements are checked to ensure an uploaded HTML file is safe and well-formed?",
+    "category": "semantic",
+    "is_answerable": true,
+    "target_documents": [
+      "security_compliance_policy.md"
+    ],
+    "expected_keywords": [
+      "<html>",
+      "<!doctype>",
+      "magic bytes",
+      "tags"
+    ],
+    "ground_truth_answer": "The upload validator checks for valid HTML tags such as <html> and <!DOCTYPE> and ensures absence of binary null bytes."
+  },
+  {
+    "id": "sem_07",
+    "question": "How do sparse term frequencies complement vector embeddings in query execution?",
+    "category": "semantic",
+    "is_answerable": true,
+    "target_documents": [
+      "example_architecture.md"
+    ],
+    "expected_keywords": [
+      "bm25",
+      "exact keyword",
+      "rrf",
+      "dense"
+    ],
+    "ground_truth_answer": "BM25 captures exact terminology and model codes that dense embeddings might blur, fused via RRF."
+  },
+  {
+    "id": "sem_08",
+    "question": "What is the procedure when an end-user poses a query whose context does not exist in the library?",
+    "category": "semantic",
+    "is_answerable": true,
+    "target_documents": [
+      "security_compliance_policy.md",
+      "example_architecture.md"
+    ],
+    "expected_keywords": [
+      "refusal",
+      "cannot answer",
+      "insufficient_evidence"
+    ],
+    "ground_truth_answer": "The system issues an explicit refusal stating that it cannot answer based on provided documents."
+  },
+  {
+    "id": "sem_09",
+    "question": "How does HNSW balance graph traversal speed against memory overhead during query execution?",
+    "category": "semantic",
+    "is_answerable": true,
+    "target_documents": [
+      "database_indexing_guide.md"
+    ],
+    "expected_keywords": [
+      "ef_search",
+      "m = 16",
+      "candidate list"
+    ],
+    "ground_truth_answer": "By tuning ef_search to 40 and m to 16, HNSW balances dynamic candidate exploration with low latency."
+  },
+  {
+    "id": "sem_10",
+    "question": "What safeguard stops cross-origin browser requests from arbitrary domains in production?",
+    "category": "semantic",
+    "is_answerable": true,
+    "target_documents": [
+      "security_compliance_policy.md"
+    ],
+    "expected_keywords": [
+      "cors_origins",
+      "wildcard",
+      "prohibited"
+    ],
+    "ground_truth_answer": "Wildcard CORS is prohibited in production; only explicit domains in CORS_ORIGINS are allowed."
+  },
+  {
+    "id": "sem_11",
+    "question": "Why is hierarchical semantic chunking superior for structured technical documentation?",
+    "category": "semantic",
+    "is_answerable": true,
+    "target_documents": [
+      "example_architecture.md"
+    ],
+    "expected_keywords": [
+      "markdown header hierarchies",
+      "topic shifts"
+    ],
+    "ground_truth_answer": "It preserves structural context by segmenting along markdown headers and semantic topic shifts."
+  },
+  {
+    "id": "sem_12",
+    "question": "How does the cache handle memory pressure when Redis reaches its capacity ceiling?",
+    "category": "semantic",
+    "is_answerable": true,
+    "target_documents": [
+      "distributed_cache_spec.md"
+    ],
+    "expected_keywords": [
+      "volatile-lru",
+      "eviction",
+      "defragmentation"
+    ],
+    "ground_truth_answer": "It evicts least-recently-used volatile keys using volatile-lru and triggers active defragmentation."
+  },
+  {
+    "id": "sem_13",
+    "question": "What happens if a text document containing raw binary zeros is submitted to the ingestion route?",
+    "category": "semantic",
+    "is_answerable": true,
+    "target_documents": [
+      "security_compliance_policy.md"
+    ],
+    "expected_keywords": [
+      "null-byte",
+      "\\x00",
+      "rejected",
+      "400"
+    ],
+    "ground_truth_answer": "The ingestion validator detects binary null bytes and rejects the file with an HTTP 400 error."
+  },
+  {
+    "id": "sem_14",
+    "question": "How does the platform ensure that claims in an LLM answer are not hallucinations?",
+    "category": "semantic",
+    "is_answerable": true,
+    "target_documents": [
+      "security_compliance_policy.md",
+      "example_architecture.md"
+    ],
+    "expected_keywords": [
+      "citations",
+      "[chunk id]",
+      "grounded",
+      "verified"
+    ],
+    "ground_truth_answer": "Every factual claim must cite a verified source chunk, and claim verification confirms evidence support."
+  },
+  {
+    "id": "sem_15",
+    "question": "What makes the sliding-window rate limiter fairer than a fixed-window counter?",
+    "category": "semantic",
+    "is_answerable": true,
+    "target_documents": [
+      "distributed_cache_spec.md"
+    ],
+    "expected_keywords": [
+      "sliding-window",
+      "zset",
+      "60 seconds"
+    ],
+    "ground_truth_answer": "The sliding-window evaluates a continuous 60-second window, preventing burst spikes at window boundaries."
+  },
+  {
+    "id": "sem_16",
+    "question": "How does pgvector approximate nearest neighbor lookup differ from brute-force scanning?",
+    "category": "semantic",
+    "is_answerable": true,
+    "target_documents": [
+      "database_indexing_guide.md"
+    ],
+    "expected_keywords": [
+      "hnsw",
+      "graph",
+      "sub-15ms"
+    ],
+    "ground_truth_answer": "HNSW navigates a multi-layer graph rather than comparing against every vector in the database."
+  },
+  {
+    "id": "sem_17",
+    "question": "What protocol allows failover in the Redis cluster without data disruption?",
+    "category": "semantic",
+    "is_answerable": true,
+    "target_documents": [
+      "distributed_cache_spec.md"
+    ],
+    "expected_keywords": [
+      "sentinel",
+      "automatic failover",
+      "3500ms"
+    ],
+    "ground_truth_answer": "Redis Sentinel provides automatic failover quorum within 3500ms across 1 primary and 2 replicas."
+  },
+  {
+    "id": "sem_18",
+    "question": "Why is Reciprocal Rank Fusion preferred over linear score addition for hybrid retrieval?",
+    "category": "semantic",
+    "is_answerable": true,
+    "target_documents": [
+      "example_architecture.md"
+    ],
+    "expected_keywords": [
+      "rrf",
+      "rank",
+      "sum 1 / (k + rank)"
+    ],
+    "ground_truth_answer": "RRF combines rankings without needing to normalize different score scales between vector and BM25."
+  },
+  {
+    "id": "sem_19",
+    "question": "How does the system enforce strict data confidentiality between multiple organizations?",
+    "category": "semantic",
+    "is_answerable": true,
+    "target_documents": [
+      "security_compliance_policy.md"
+    ],
+    "expected_keywords": [
+      "tenant isolation",
+      "user_id",
+      "partitioned"
+    ],
+    "ground_truth_answer": "Every document and chunk contains user_id / tenant_id metadata, ensuring tenant isolation."
+  },
+  {
+    "id": "sem_20",
+    "question": "What role does memory allocation play when building pgvector HNSW indexes?",
+    "category": "semantic",
+    "is_answerable": true,
+    "target_documents": [
+      "database_indexing_guide.md"
+    ],
+    "expected_keywords": [
+      "maintenance_work_mem = '2gb'",
+      "parallel"
+    ],
+    "ground_truth_answer": "Setting maintenance_work_mem to 2GB provides sufficient memory for parallel HNSW graph creation."
+  },
+  {
+    "id": "num_01",
+    "question": "What is the client communication port number for the primary Redis cluster?",
+    "category": "exact_identifier",
+    "is_answerable": true,
+    "target_documents": [
+      "distributed_cache_spec.md"
+    ],
+    "expected_keywords": [
+      "6379"
+    ],
+    "ground_truth_answer": "Port 6379 is allocated for client communication."
+  },
+  {
+    "id": "num_02",
+    "question": "What is the cluster bus gossip port number for the Redis cache cluster?",
+    "category": "exact_identifier",
+    "is_answerable": true,
+    "target_documents": [
+      "distributed_cache_spec.md"
+    ],
+    "expected_keywords": [
+      "16379"
+    ],
+    "ground_truth_answer": "Port 16379 is used for cluster bus gossip communication."
+  },
+  {
+    "id": "num_03",
+    "question": "What value is configured for the HNSW index parameter m?",
+    "category": "exact_identifier",
+    "is_answerable": true,
+    "target_documents": [
+      "database_indexing_guide.md"
+    ],
+    "expected_keywords": [
+      "m = 16",
+      "16"
+    ],
+    "ground_truth_answer": "The parameter m is set to 16."
+  },
+  {
+    "id": "num_04",
+    "question": "What value is configured for ef_construction in pgvector HNSW indexing?",
+    "category": "exact_identifier",
+    "is_answerable": true,
+    "target_documents": [
+      "database_indexing_guide.md"
+    ],
+    "expected_keywords": [
+      "ef_construction = 64",
+      "64"
+    ],
+    "ground_truth_answer": "The parameter ef_construction is set to 64."
+  },
+  {
+    "id": "num_05",
+    "question": "What value is configured for ef_search at vector query time?",
+    "category": "exact_identifier",
+    "is_answerable": true,
+    "target_documents": [
+      "database_indexing_guide.md"
+    ],
+    "expected_keywords": [
+      "ef_search = 40",
+      "40"
+    ],
+    "ground_truth_answer": "The parameter ef_search is set to 40."
+  },
+  {
+    "id": "num_06",
+    "question": "What is the dimensionality of vectors generated by BAAI/bge-small-en-v1.5?",
+    "category": "exact_identifier",
+    "is_answerable": true,
+    "target_documents": [
+      "example_architecture.md",
+      "database_indexing_guide.md"
+    ],
+    "expected_keywords": [
+      "384",
+      "dimensions"
+    ],
+    "ground_truth_answer": "The embedding dimension is 384."
+  },
+  {
+    "id": "num_07",
+    "question": "What is the failover quorum timeout for the Redis Sentinel high-availability cluster?",
+    "category": "exact_identifier",
+    "is_answerable": true,
+    "target_documents": [
+      "distributed_cache_spec.md"
+    ],
+    "expected_keywords": [
+      "3500ms",
+      "3500"
+    ],
+    "ground_truth_answer": "The automatic failover quorum occurs within 3500ms."
+  },
+  {
+    "id": "num_08",
+    "question": "By what percentage did database response times improve in the Q3 report?",
+    "category": "exact_identifier",
+    "is_answerable": true,
+    "target_documents": [
+      "example_report.html"
+    ],
+    "expected_keywords": [
+      "34%",
+      "34 percent"
+    ],
+    "ground_truth_answer": "Database query response times improved by 34%."
+  },
+  {
+    "id": "num_09",
+    "question": "What was the P95 database latency reduction reported in the Q3 performance report?",
+    "category": "exact_identifier",
+    "is_answerable": true,
+    "target_documents": [
+      "example_report.html"
+    ],
+    "expected_keywords": [
+      "142ms",
+      "28ms"
+    ],
+    "ground_truth_answer": "Average P95 latency dropped from 142ms to 28ms."
+  },
+  {
+    "id": "num_10",
+    "question": "By what percentage did Redis query caching reduce external LLM API calls in Q3?",
+    "category": "exact_identifier",
+    "is_answerable": true,
+    "target_documents": [
+      "example_report.html"
+    ],
+    "expected_keywords": [
+      "41%",
+      "41 percent"
+    ],
+    "ground_truth_answer": "Semantic query caching reduced LLM API calls by 41%."
+  },
+  {
+    "id": "num_11",
+    "question": "What precision@5 improvement was achieved by cross-encoder re-ranking in the Q3 report?",
+    "category": "exact_identifier",
+    "is_answerable": true,
+    "target_documents": [
+      "example_report.html"
+    ],
+    "expected_keywords": [
+      "0.72",
+      "0.94"
+    ],
+    "ground_truth_answer": "Precision@5 improved from 0.72 to 0.94."
+  },
+  {
+    "id": "num_12",
+    "question": "What is the default client rate limit per minute enforced across the API?",
+    "category": "exact_identifier",
+    "is_answerable": true,
+    "target_documents": [
+      "distributed_cache_spec.md"
+    ],
+    "expected_keywords": [
+      "120 requests per minute",
+      "120"
+    ],
+    "ground_truth_answer": "The rate limit is 120 requests per minute per IP or API key."
+  },
+  {
+    "id": "num_13",
+    "question": "What is the numerical minimum relevance threshold required before answering?",
+    "category": "exact_identifier",
+    "is_answerable": true,
+    "target_documents": [
+      "security_compliance_policy.md"
+    ],
+    "expected_keywords": [
+      "0.20",
+      "relevance_threshold"
+    ],
+    "ground_truth_answer": "The minimum relevance threshold is 0.20."
+  },
+  {
+    "id": "num_14",
+    "question": "What is the mathematical formula for Reciprocal Rank Fusion (RRF)?",
+    "category": "exact_identifier",
+    "is_answerable": true,
+    "target_documents": [
+      "example_architecture.md"
+    ],
+    "expected_keywords": [
+      "1 / (k + rank(d))",
+      "rrf"
+    ],
+    "ground_truth_answer": "RRF(d) = sum(1 / (k + rank(d)))."
+  },
+  {
+    "id": "num_15",
+    "question": "What is the memory allocation set for maintenance_work_mem during HNSW indexing?",
+    "category": "exact_identifier",
+    "is_answerable": true,
+    "target_documents": [
+      "database_indexing_guide.md"
+    ],
+    "expected_keywords": [
+      "2gb",
+      "maintenance_work_mem"
+    ],
+    "ground_truth_answer": "maintenance_work_mem is set to 2GB."
+  },
+  {
+    "id": "num_16",
+    "question": "What is the autovacuum_vacuum_scale_factor configured in the indexing guide?",
+    "category": "exact_identifier",
+    "is_answerable": true,
+    "target_documents": [
+      "database_indexing_guide.md"
+    ],
+    "expected_keywords": [
+      "0.05",
+      "autovacuum_vacuum_scale_factor"
+    ],
+    "ground_truth_answer": "The autovacuum_vacuum_scale_factor is set to 0.05."
+  },
+  {
+    "id": "num_17",
+    "question": "What is the autovacuum_analyze_scale_factor configured for vector tables?",
+    "category": "exact_identifier",
+    "is_answerable": true,
+    "target_documents": [
+      "database_indexing_guide.md"
+    ],
+    "expected_keywords": [
+      "0.02",
+      "autovacuum_analyze_scale_factor"
+    ],
+    "ground_truth_answer": "The autovacuum_analyze_scale_factor is set to 0.02."
+  },
+  {
+    "id": "num_18",
+    "question": "What is the TTL for high-frequency metadata cache keys in Redis?",
+    "category": "exact_identifier",
+    "is_answerable": true,
+    "target_documents": [
+      "distributed_cache_spec.md"
+    ],
+    "expected_keywords": [
+      "300 seconds",
+      "300"
+    ],
+    "ground_truth_answer": "High-frequency metadata keys expire after 300 seconds."
+  },
+  {
+    "id": "num_19",
+    "question": "What is the memory defragmentation threshold ratio in Redis?",
+    "category": "exact_identifier",
+    "is_answerable": true,
+    "target_documents": [
+      "distributed_cache_spec.md"
+    ],
+    "expected_keywords": [
+      "1.5",
+      "defragmentation"
+    ],
+    "ground_truth_answer": "Active memory defragmentation activates when the fragmentation ratio exceeds 1.5."
+  },
+  {
+    "id": "num_20",
+    "question": "What is the replication node count in the Redis Sentinel cluster?",
+    "category": "exact_identifier",
+    "is_answerable": true,
+    "target_documents": [
+      "distributed_cache_spec.md"
+    ],
+    "expected_keywords": [
+      "3",
+      "1 primary",
+      "2 read replicas"
+    ],
+    "ground_truth_answer": "A 3-node replication setup (1 primary, 2 read replicas) is used."
+  },
+  {
+    "id": "mhop_01",
+    "question": "How do the Q3 PostgreSQL migration results align with the HNSW parameter recommendations?",
+    "category": "multi_hop",
+    "is_answerable": true,
+    "target_documents": [
+      "example_report.html",
+      "database_indexing_guide.md"
+    ],
+    "expected_keywords": [
+      "34%",
+      "142ms to 28ms",
+      "hnsw",
+      "ef_search = 40"
+    ],
+    "ground_truth_answer": "The Q3 report showed a 34% speedup and P95 latency drop from 142ms to 28ms using HNSW, matching the indexing guide's sub-15ms search targets."
+  },
+  {
+    "id": "mhop_02",
+    "question": "Explain how document ingestion invalidates the Redis cache and triggers subsequent pgvector HNSW indexing.",
+    "category": "multi_hop",
+    "is_answerable": true,
+    "target_documents": [
+      "distributed_cache_spec.md",
+      "database_indexing_guide.md",
+      "example_architecture.md"
+    ],
+    "expected_keywords": [
+      "rag:index_version",
+      "increment",
+      "bge-small-en-v1.5",
+      "hnsw"
+    ],
+    "ground_truth_answer": "Ingestion increments rag:index_version to invalidate the cache, embeds chunks using bge-small-en-v1.5, and adds them to the pgvector HNSW index."
+  },
+  {
+    "id": "mhop_03",
+    "question": "How does the file upload size limit in the security policy interact with the bounded streaming reader?",
+    "category": "multi_hop",
+    "is_answerable": true,
+    "target_documents": [
+      "security_compliance_policy.md",
+      "distributed_cache_spec.md"
+    ],
+    "expected_keywords": [
+      "10mb",
+      "64kb",
+      "http 413"
+    ],
+    "ground_truth_answer": "The security policy enforces a 10MB limit while the streaming reader consumes 64KB chunks, raising HTTP 413 if the total exceeds 10MB."
+  },
+  {
+    "id": "mhop_04",
+    "question": "Compare the precision boost from cross-encoder re-ranking in the Q3 report with its architecture design.",
+    "category": "multi_hop",
+    "is_answerable": true,
+    "target_documents": [
+      "example_report.html",
+      "example_architecture.md"
+    ],
+    "expected_keywords": [
+      "0.72 to 0.94",
+      "ms-marco-MiniLM",
+      "self-attention"
+    ],
+    "ground_truth_answer": "The architecture uses ms-marco-MiniLM self-attention to score query-chunk pairs, which empirically improved precision@5 from 0.72 to 0.94 in Q3."
+  },
+  {
+    "id": "mhop_05",
+    "question": "How does the Redis cache key schema incorporate both the embedding model and the HNSW vector store parameters?",
+    "category": "multi_hop",
+    "is_answerable": true,
+    "target_documents": [
+      "distributed_cache_spec.md",
+      "example_architecture.md"
+    ],
+    "expected_keywords": [
+      "rag:q:",
+      "embedding_model",
+      "pipeline",
+      "index_version"
+    ],
+    "ground_truth_answer": "The cache key schema includes the embedding model, pipeline type, candidate_k, top_k, and index_version."
+  },
+  {
+    "id": "mhop_06",
+    "question": "Synthesize the tenant isolation policy with the document chunking and indexing lifecycle.",
+    "category": "multi_hop",
+    "is_answerable": true,
+    "target_documents": [
+      "security_compliance_policy.md",
+      "example_architecture.md"
+    ],
+    "expected_keywords": [
+      "tenant_id",
+      "user_id",
+      "chunk_metadata",
+      "partitioned"
+    ],
+    "ground_truth_answer": "During chunking, user_id and tenant_id metadata are attached to chunks so vector and BM25 searches filter strictly within tenant boundaries."
+  },
+  {
+    "id": "mhop_07",
+    "question": "How do the Redis client communication port and Sentinel failover ensure reliable rate limiting?",
+    "category": "multi_hop",
+    "is_answerable": true,
+    "target_documents": [
+      "distributed_cache_spec.md"
+    ],
+    "expected_keywords": [
+      "port 6379",
+      "3500ms",
+      "zset",
+      "120 requests"
+    ],
+    "ground_truth_answer": "Clients connect on port 6379 to update ZSET rate limit counters, while Sentinel failover within 3500ms ensures uptime across replicas."
+  },
+  {
+    "id": "mhop_08",
+    "question": "Why does the combination of BM25 and pgvector HNSW address the weaknesses of both individual approaches?",
+    "category": "multi_hop",
+    "is_answerable": true,
+    "target_documents": [
+      "example_architecture.md",
+      "database_indexing_guide.md"
+    ],
+    "expected_keywords": [
+      "exact keyword",
+      "semantic",
+      "rrf",
+      "hnsw"
+    ],
+    "ground_truth_answer": "HNSW provides semantic vector recall while BM25 guarantees exact keyword matching; RRF merges their strengths."
+  },
+  {
+    "id": "mhop_09",
+    "question": "Explain how the Q3 report's 41% LLM API reduction relates to the default 1-hour cache TTL specification.",
+    "category": "multi_hop",
+    "is_answerable": true,
+    "target_documents": [
+      "example_report.html",
+      "distributed_cache_spec.md"
+    ],
+    "expected_keywords": [
+      "41%",
+      "3600 seconds",
+      "sub-5ms"
+    ],
+    "ground_truth_answer": "The 3600-second TTL allows identical or repeated queries to resolve in sub-5ms from Redis, reducing LLM calls by 41%."
+  },
+  {
+    "id": "mhop_10",
+    "question": "How do the autovacuum settings support HNSW index performance under heavy ingestion?",
+    "category": "multi_hop",
+    "is_answerable": true,
+    "target_documents": [
+      "database_indexing_guide.md"
+    ],
+    "expected_keywords": [
+      "0.05",
+      "0.02",
+      "autovacuum",
+      "maintenance_work_mem"
+    ],
+    "ground_truth_answer": "Aggressive autovacuum scale factors (0.05 / 0.02) prevent dead tuple bloat in PostgreSQL while HNSW graphs are maintained."
+  },
+  {
+    "id": "mhop_11",
+    "question": "How does the system ensure valid citations when multi-document evidence is retrieved?",
+    "category": "multi_hop",
+    "is_answerable": true,
+    "target_documents": [
+      "example_architecture.md",
+      "security_compliance_policy.md"
+    ],
+    "expected_keywords": [
+      "[chunk id]",
+      "grounded",
+      "verified",
+      "multi-document"
+    ],
+    "ground_truth_answer": "Each claim cites specific bracketed chunk IDs with source filenames and page numbers, validated by citation verification."
+  },
+  {
+    "id": "mhop_12",
+    "question": "What is the relationship between cosine distance operator <=> and unit normalization of embeddings?",
+    "category": "multi_hop",
+    "is_answerable": true,
+    "target_documents": [
+      "database_indexing_guide.md",
+      "example_architecture.md"
+    ],
+    "expected_keywords": [
+      "<=>",
+      "normalized",
+      "384",
+      "bge-small-en-v1.5"
+    ],
+    "ground_truth_answer": "Because BGE embeddings are normalized to unit length, cosine distance <=> accurately reflects semantic cosine similarity."
+  },
+  {
+    "id": "mhop_13",
+    "question": "How does the security refusal mandate prevent hallucinations when combining evidence across sources?",
+    "category": "multi_hop",
+    "is_answerable": true,
+    "target_documents": [
+      "security_compliance_policy.md",
+      "example_architecture.md"
+    ],
+    "expected_keywords": [
+      "relevance_threshold",
+      "0.20",
+      "insufficient_evidence",
+      "refusal"
+    ],
+    "ground_truth_answer": "If top retrieved evidence scores below 0.20 across all documents, the system refuses with insufficient_evidence."
+  },
+  {
+    "id": "mhop_14",
+    "question": "Compare the memory consumption trade-offs between HNSW ef_construction=64 and ef_search=40.",
+    "category": "multi_hop",
+    "is_answerable": true,
+    "target_documents": [
+      "database_indexing_guide.md"
+    ],
+    "expected_keywords": [
+      "ef_construction = 64",
+      "ef_search = 40",
+      "build time",
+      "search latency"
+    ],
+    "ground_truth_answer": "ef_construction=64 increases index build memory for higher connectivity; ef_search=40 keeps query latency sub-15ms."
+  },
+  {
+    "id": "mhop_15",
+    "question": "How do request IDs assist in tracing cache hits versus database vector search executions?",
+    "category": "multi_hop",
+    "is_answerable": true,
+    "target_documents": [
+      "security_compliance_policy.md",
+      "distributed_cache_spec.md"
+    ],
+    "expected_keywords": [
+      "x-request-id",
+      "correlation",
+      "duration"
+    ],
+    "ground_truth_answer": "The X-Request-ID header tags log lines to measure whether a query resolved in sub-5ms via cache or required full retrieval."
+  },
+  {
+    "id": "unans_01",
+    "question": "What is the cluster join token for the Kubernetes control plane in production?",
+    "category": "unanswerable",
+    "is_answerable": false,
+    "target_documents": [],
+    "expected_keywords": [
+      "cannot answer",
+      "not found in provided documents",
+      "insufficient"
+    ],
+    "ground_truth_answer": "I cannot answer this question based on the provided documents as no relevant context was found."
+  },
+  {
+    "id": "unans_02",
+    "question": "How many quantum qubits are required for Shor's algorithm in this system?",
+    "category": "unanswerable",
+    "is_answerable": false,
+    "target_documents": [],
+    "expected_keywords": [
+      "cannot answer",
+      "not found in provided documents",
+      "insufficient"
+    ],
+    "ground_truth_answer": "I cannot answer this question based on the provided documents as no relevant context was found."
+  },
+  {
+    "id": "unans_03",
+    "question": "What is the Snowflake data warehouse credit quota allocated for data science?",
+    "category": "unanswerable",
+    "is_answerable": false,
+    "target_documents": [],
+    "expected_keywords": [
+      "cannot answer",
+      "not found in provided documents",
+      "insufficient"
+    ],
+    "ground_truth_answer": "I cannot answer this question based on the provided documents as no relevant context was found."
+  },
+  {
+    "id": "unans_04",
+    "question": "What Kafka broker topic handles user clickstream analytics in real time?",
+    "category": "unanswerable",
+    "is_answerable": false,
+    "target_documents": [],
+    "expected_keywords": [
+      "cannot answer",
+      "not found in provided documents",
+      "insufficient"
+    ],
+    "ground_truth_answer": "I cannot answer this question based on the provided documents as no relevant context was found."
+  },
+  {
+    "id": "unans_05",
+    "question": "What is the root password for the MySQL staging database?",
+    "category": "unanswerable",
+    "is_answerable": false,
+    "target_documents": [],
+    "expected_keywords": [
+      "cannot answer",
+      "not found in provided documents",
+      "insufficient"
+    ],
+    "ground_truth_answer": "I cannot answer this question based on the provided documents as no relevant context was found."
+  },
+  {
+    "id": "unans_06",
+    "question": "What is the pricing model for AWS Lambda functions in us-west-2?",
+    "category": "unanswerable",
+    "is_answerable": false,
+    "target_documents": [],
+    "expected_keywords": [
+      "cannot answer",
+      "not found in provided documents",
+      "insufficient"
+    ],
+    "ground_truth_answer": "I cannot answer this question based on the provided documents as no relevant context was found."
+  },
+  {
+    "id": "unans_07",
+    "question": "How is Elasticsearch configured for logstash forwarding in this project?",
+    "category": "unanswerable",
+    "is_answerable": false,
+    "target_documents": [],
+    "expected_keywords": [
+      "cannot answer",
+      "not found in provided documents",
+      "insufficient"
+    ],
+    "ground_truth_answer": "I cannot answer this question based on the provided documents as no relevant context was found."
+  },
+  {
+    "id": "unans_08",
+    "question": "What is the Stripe webhook secret for billing subscription renewals?",
+    "category": "unanswerable",
+    "is_answerable": false,
+    "target_documents": [],
+    "expected_keywords": [
+      "cannot answer",
+      "not found in provided documents",
+      "insufficient"
+    ],
+    "ground_truth_answer": "I cannot answer this question based on the provided documents as no relevant context was found."
+  },
+  {
+    "id": "unans_09",
+    "question": "Who was the chief architect of the ancient Roman Colosseum?",
+    "category": "unanswerable",
+    "is_answerable": false,
+    "target_documents": [],
+    "expected_keywords": [
+      "cannot answer",
+      "not found in provided documents",
+      "insufficient"
+    ],
+    "ground_truth_answer": "I cannot answer this question based on the provided documents as no relevant context was found."
+  },
+  {
+    "id": "unans_10",
+    "question": "What is the recommended recipe for baking sourdough bread at high altitude?",
+    "category": "unanswerable",
+    "is_answerable": false,
+    "target_documents": [],
+    "expected_keywords": [
+      "cannot answer",
+      "not found in provided documents",
+      "insufficient"
+    ],
+    "ground_truth_answer": "I cannot answer this question based on the provided documents as no relevant context was found."
+  },
+  {
+    "id": "unans_11",
+    "question": "What is the Docker Swarm manager token used for node enrollment?",
+    "category": "unanswerable",
+    "is_answerable": false,
+    "target_documents": [],
+    "expected_keywords": [
+      "cannot answer",
+      "not found in provided documents",
+      "insufficient"
+    ],
+    "ground_truth_answer": "I cannot answer this question based on the provided documents as no relevant context was found."
+  },
+  {
+    "id": "unans_12",
+    "question": "What is the gRPC TLS certificate thumbprint for mobile clients?",
+    "category": "unanswerable",
+    "is_answerable": false,
+    "target_documents": [],
+    "expected_keywords": [
+      "cannot answer",
+      "not found in provided documents",
+      "insufficient"
+    ],
+    "ground_truth_answer": "I cannot answer this question based on the provided documents as no relevant context was found."
+  },
+  {
+    "id": "unans_13",
+    "question": "How many days of paid annual leave do contractors receive in this company?",
+    "category": "unanswerable",
+    "is_answerable": false,
+    "target_documents": [],
+    "expected_keywords": [
+      "cannot answer",
+      "not found in provided documents",
+      "insufficient"
+    ],
+    "ground_truth_answer": "I cannot answer this question based on the provided documents as no relevant context was found."
+  },
+  {
+    "id": "unans_14",
+    "question": "What is the current stock price of Apple Inc on NASDAQ?",
+    "category": "unanswerable",
+    "is_answerable": false,
+    "target_documents": [],
+    "expected_keywords": [
+      "cannot answer",
+      "not found in provided documents",
+      "insufficient"
+    ],
+    "ground_truth_answer": "I cannot answer this question based on the provided documents as no relevant context was found."
+  },
+  {
+    "id": "unans_15",
+    "question": "What is the internal IP address of the production Jenkins build server?",
+    "category": "unanswerable",
+    "is_answerable": false,
+    "target_documents": [],
+    "expected_keywords": [
+      "cannot answer",
+      "not found in provided documents",
+      "insufficient"
+    ],
+    "ground_truth_answer": "I cannot answer this question based on the provided documents as no relevant context was found."
+  },
+  {
+    "id": "unans_16",
+    "question": "What are the coordinates of the Voyager 1 space probe?",
+    "category": "unanswerable",
+    "is_answerable": false,
+    "target_documents": [],
+    "expected_keywords": [
+      "cannot answer",
+      "not found in provided documents",
+      "insufficient"
+    ],
+    "ground_truth_answer": "I cannot answer this question based on the provided documents as no relevant context was found."
+  },
+  {
+    "id": "unans_17",
+    "question": "What is the encryption key for the Cassandra cluster commit log?",
+    "category": "unanswerable",
+    "is_answerable": false,
+    "target_documents": [],
+    "expected_keywords": [
+      "cannot answer",
+      "not found in provided documents",
+      "insufficient"
+    ],
+    "ground_truth_answer": "I cannot answer this question based on the provided documents as no relevant context was found."
+  },
+  {
+    "id": "unans_18",
+    "question": "What is the optimal tire pressure for a Boeing 777 passenger aircraft?",
+    "category": "unanswerable",
+    "is_answerable": false,
+    "target_documents": [],
+    "expected_keywords": [
+      "cannot answer",
+      "not found in provided documents",
+      "insufficient"
+    ],
+    "ground_truth_answer": "I cannot answer this question based on the provided documents as no relevant context was found."
+  },
+  {
+    "id": "unans_19",
+    "question": "What is the phone number of the company's legal counsel?",
+    "category": "unanswerable",
+    "is_answerable": false,
+    "target_documents": [],
+    "expected_keywords": [
+      "cannot answer",
+      "not found in provided documents",
+      "insufficient"
+    ],
+    "ground_truth_answer": "I cannot answer this question based on the provided documents as no relevant context was found."
+  },
+  {
+    "id": "unans_20",
+    "question": "What is the secret passphrase to unlock the corporate Bitcoin treasury wallet?",
+    "category": "unanswerable",
+    "is_answerable": false,
+    "target_documents": [],
+    "expected_keywords": [
+      "cannot answer",
+      "not found in provided documents",
+      "insufficient"
+    ],
+    "ground_truth_answer": "I cannot answer this question based on the provided documents as no relevant context was found."
+  }
+]

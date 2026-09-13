@@ -68,3 +68,42 @@ def test_chunking_strategy_factory():
 
     c_semantic = ChunkingStrategyFactory.get_chunker("semantic")
     assert isinstance(c_semantic, SemanticChunker)
+
+    # Fallback to default strategy
+    c_default = ChunkingStrategyFactory.get_chunker("unknown_strategy")
+    assert isinstance(c_default, SentenceChunker)
+
+
+def test_chunker_empty_document():
+    doc = LoadedDocument(filename="empty.txt", content_type="text/plain", pages=[DocumentPage(page_number=1, text="")])
+    chunker = SentenceChunker()
+    chunks = chunker.chunk(doc)
+    assert len(chunks) == 0
+
+
+def test_chunker_unicode_preservation():
+    unicode_text = "Japanese: こんにちは世界. German: Übergrößen Träger. Math: ∑(1/(k+rank))."
+    doc = LoadedDocument(filename="unicode.txt", content_type="text/plain", pages=[DocumentPage(page_number=1, text=unicode_text)])
+    chunker = FixedSizeChunker(chunk_size=100)
+    chunks = chunker.chunk(doc)
+    assert any("こんにちは世界" in c.content for c in chunks)
+    assert any("Übergrößen" in c.content for c in chunks)
+
+
+def test_chunker_zero_overlap():
+    sample_text = "A" * 200
+    doc = LoadedDocument(filename="rep.txt", content_type="text/plain", pages=[DocumentPage(page_number=1, text=sample_text)])
+    chunker = FixedSizeChunker(chunk_size=50, chunk_overlap=0)
+    chunks = chunker.chunk(doc)
+    assert len(chunks) == 4
+    for c in chunks:
+        assert len(c.content) == 50
+
+
+def test_sentence_chunker_huge_chunk_size(sample_doc):
+    chunker = SentenceChunker(chunk_size=10000, chunk_overlap=100)
+    chunks = chunker.chunk(sample_doc)
+    assert len(chunks) == 1
+    assert "First sentence" in chunks[0].content
+    assert "Sixth sentence" in chunks[0].content
+

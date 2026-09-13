@@ -46,11 +46,25 @@ export interface QueryResponse {
   answer: string;
   citations: SourceChunk[];
   retrievedChunks?: SourceChunk[];
+  retrieved_chunks?: SourceChunk[];
   retrievalMode: RetrievalMode;
+  retrieval_mode?: RetrievalMode;
   latencyMs: number;
   latency_ms?: Record<string, number>;
   modelName?: string;
+  model_name?: string;
   cached?: boolean;
+  grounding_status?: "grounded" | "insufficient_evidence" | "citation_mismatch" | "refusal";
+  groundingStatus?: string;
+  rewritten_query?: string;
+  claim_verifications?: Array<{
+    claim: string;
+    cited_chunk_id?: string;
+    is_supported: boolean;
+    confidence: number;
+    reason: string;
+  }>;
+  multi_doc_provenance?: Record<string, number>;
 }
 
 export interface EvalRow {
@@ -60,7 +74,15 @@ export interface EvalRow {
   faithfulness: number;
   relevance?: number;
   avgLatencyMs?: number;
+  recallAt1?: number;
+  recallAt3?: number;
+  mrr?: number;
+  ndcgAt5?: number;
+  citationCorrectness?: number;
+  unsupportedClaimRate?: number;
+  refusalAccuracy?: number;
 }
+
 
 export interface AppConfig {
   embedding_provider: string;

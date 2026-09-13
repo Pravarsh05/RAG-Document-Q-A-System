@@ -25,6 +25,8 @@ import {
   File,
   Filter,
   Flame,
+  AlertTriangle,
+  ShieldAlert,
 } from "lucide-react";
 import {
   useAskQuestion,
@@ -55,6 +57,8 @@ interface Turn {
   mode: RetrievalMode;
   modelName?: string;
   cached?: boolean;
+  groundingStatus?: string;
+  rewrittenQuery?: string;
 }
 
 const fileTypeIconMap: Record<string, { color: string; icon: typeof FileText }> = {
@@ -65,17 +69,6 @@ const fileTypeIconMap: Record<string, { color: string; icon: typeof FileText }> 
 };
 
 const chunkingStrategies: ChunkingStrategy[] = ["sentence", "semantic", "fixed"];
-
-// Benchmark baseline values per retrieval mode
-const modeBenchmarkMap: Record<
-  RetrievalMode,
-  { p5: number; r5: number; faithfulness: number; avgLatency: number }
-> = {
-  hybrid_rerank: { p5: 0.96, r5: 0.93, faithfulness: 0.95, avgLatency: 95.7 },
-  hybrid: { p5: 0.92, r5: 0.88, faithfulness: 0.93, avgLatency: 58.4 },
-  vector: { p5: 0.83, r5: 0.75, faithfulness: 0.90, avgLatency: 42.1 },
-  bm25: { p5: 0.78, r5: 0.69, faithfulness: 0.88, avgLatency: 28.3 },
-};
 
 export function QueryPage() {
   // State
@@ -188,7 +181,9 @@ export function QueryPage() {
       {
         onSuccess: (res) => {
           const newCitations = res.citations || [];
-          const newRetrieved = res.retrievedChunks || res.citations || [];
+          const newRetrieved = res.retrievedChunks || res.retrieved_chunks || res.citations || [];
+          const grounding = res.grounding_status || res.groundingStatus;
+          const rewritten = res.rewritten_query;
           setTurns((prev) => [
             ...prev,
             {
@@ -198,9 +193,11 @@ export function QueryPage() {
               retrievedChunks: newRetrieved,
               latencyMs: res.latencyMs || 0,
               latencyDetails: res.latency_ms,
-              mode: res.retrievalMode,
-              modelName: res.modelName,
+              mode: res.retrievalMode || res.retrieval_mode || mode,
+              modelName: res.modelName || res.model_name,
               cached: res.cached,
+              groundingStatus: grounding,
+              rewrittenQuery: rewritten,
             },
           ]);
           setQuestion("");
@@ -229,22 +226,20 @@ export function QueryPage() {
   const latestTurn = turns.length > 0 ? turns[turns.length - 1] : null;
   const activeSources = latestTurn?.retrievedChunks || latestTurn?.citations || [];
 
-  // Metrics from evalRows or benchmark fallback
-  const currentBenchmarks = modeBenchmarkMap[mode];
-  const evalRow = evalRows?.find((r) =>
-    mode === "hybrid_rerank"
-      ? r.pipeline.includes("rerank")
-      : mode === "hybrid"
-      ? r.pipeline === "hybrid"
-      : mode === "vector"
-      ? r.pipeline.includes("vector")
-      : false
-  );
+  // Metrics from real evalRows if evaluation has been executed
+  const evalRow = evalRows?.find((r) => {
+    const pipe = r.pipeline.toLowerCase();
+    if (mode === "hybrid_rerank") return pipe.includes("rerank");
+    if (mode === "hybrid") return pipe === "hybrid";
+    if (mode === "vector") return pipe.includes("vector");
+    if (mode === "bm25") return pipe.includes("bm25");
+    return false;
+  });
 
-  const precisionVal = evalRow?.precisionAt5 ?? currentBenchmarks.p5;
-  const recallVal = evalRow?.recallAt5 ?? currentBenchmarks.r5;
-  const faithfulnessVal = evalRow?.faithfulness ?? currentBenchmarks.faithfulness;
-  const latencyVal = latestTurn?.latencyMs ?? currentBenchmarks.avgLatency;
+  const precisionVal = evalRow?.precisionAt5 ?? null;
+  const recallVal = evalRow?.recallAt5 ?? null;
+  const faithfulnessVal = evalRow?.faithfulness ?? null;
+  const latencyVal = latestTurn?.latencyMs ?? (evalRow?.avgLatencyMs ?? null);
 
   const samplePrompts = [
     { title: "Architecture & RRF", query: "How does the hybrid search and Reciprocal Rank Fusion pipeline work?" },
@@ -578,9 +573,18 @@ export function QueryPage() {
             <div key={i} className="space-y-4 animate-fadeIn select-text">
               {/* User Question */}
               <div className="flex items-start justify-end gap-3">
-                <div className="max-w-2xl rounded-lg border border-ink-700 bg-ink-850 px-4 py-3 font-mono text-xs text-mist-100 shadow-sm leading-relaxed">
-                  <span className="text-lexical font-bold mr-2">&gt;</span>
-                  {turn.question}
+                <div className="max-w-2xl flex flex-col items-end gap-1">
+                  <div className="rounded-lg border border-ink-700 bg-ink-850 px-4 py-3 font-mono text-xs text-mist-100 shadow-sm leading-relaxed">
+                    <span className="text-lexical font-bold mr-2">&gt;</span>
+                    {turn.question}
+                  </div>
+                  {turn.rewrittenQuery &&
+                    turn.rewrittenQuery.trim().toLowerCase() !== turn.question.trim().toLowerCase() && (
+                      <div className="flex items-center gap-1.5 font-mono text-[10px] text-mist-400 bg-ink-900/80 border border-ink-800 rounded px-2 py-0.5">
+                        <Sparkles className="h-2.5 w-2.5 text-lexical" />
+                        <span>Rewritten for retrieval: <span className="text-mist-200 italic">"{turn.rewrittenQuery}"</span></span>
+                      </div>
+                    )}
                 </div>
                 <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-ink-800 border border-ink-700 text-mist-300">
                   <User className="h-4 w-4" />
@@ -597,9 +601,23 @@ export function QueryPage() {
                     {/* Top Bar inside card */}
                     <div className="mb-3 flex items-center justify-between border-b border-ink-800 pb-2.5 font-mono text-[11px]">
                       <div className="flex items-center gap-2 text-mist-400">
-                        <span className="flex items-center gap-1 text-vector font-semibold">
-                          <ShieldCheck className="h-3.5 w-3.5" /> Grounded Synthesis
-                        </span>
+                        {turn.groundingStatus === "grounded" ? (
+                          <span className="flex items-center gap-1 text-ok font-semibold">
+                            <ShieldCheck className="h-3.5 w-3.5 text-ok" /> Verified Grounded
+                          </span>
+                        ) : turn.groundingStatus === "citation_mismatch" ? (
+                          <span className="flex items-center gap-1 text-amber-400 font-semibold">
+                            <AlertTriangle className="h-3.5 w-3.5 text-amber-400" /> Citation Warning
+                          </span>
+                        ) : turn.groundingStatus === "insufficient_evidence" || turn.groundingStatus === "refusal" ? (
+                          <span className="flex items-center gap-1 text-rose-400 font-semibold">
+                            <ShieldAlert className="h-3.5 w-3.5 text-rose-400" /> Insufficient Evidence
+                          </span>
+                        ) : (
+                          <span className="flex items-center gap-1 text-vector font-semibold">
+                            <ShieldCheck className="h-3.5 w-3.5" /> Grounded Synthesis
+                          </span>
+                        )}
                         <span>&middot;</span>
                         <span className="text-mist-400">{turn.modelName || "Gemini 1.5 Flash"}</span>
                       </div>
@@ -831,12 +849,12 @@ export function QueryPage() {
                   <Target className="h-3.5 w-3.5 text-lexical" />
                 </div>
                 <div className="mt-1 font-mono text-xl font-bold text-lexical">
-                  {(precisionVal * 100).toFixed(0)}%
+                  {precisionVal != null ? `${(precisionVal * 100).toFixed(0)}%` : "--"}
                 </div>
                 <div className="mt-1 h-1 w-full rounded-full bg-ink-800 overflow-hidden">
                   <div
                     className="h-full bg-lexical rounded-full transition-all"
-                    style={{ width: `${precisionVal * 100}%` }}
+                    style={{ width: `${precisionVal != null ? precisionVal * 100 : 0}%` }}
                   />
                 </div>
                 <p className="mt-1 font-mono text-[9px] text-mist-400">Precision @ Top 5</p>
@@ -849,12 +867,12 @@ export function QueryPage() {
                   <Zap className="h-3.5 w-3.5 text-vector" />
                 </div>
                 <div className="mt-1 font-mono text-xl font-bold text-vector">
-                  {(recallVal * 100).toFixed(0)}%
+                  {recallVal != null ? `${(recallVal * 100).toFixed(0)}%` : "--"}
                 </div>
                 <div className="mt-1 h-1 w-full rounded-full bg-ink-800 overflow-hidden">
                   <div
                     className="h-full bg-vector rounded-full transition-all"
-                    style={{ width: `${recallVal * 100}%` }}
+                    style={{ width: `${recallVal != null ? recallVal * 100 : 0}%` }}
                   />
                 </div>
                 <p className="mt-1 font-mono text-[9px] text-mist-400">Recall @ Top 5</p>
@@ -867,12 +885,12 @@ export function QueryPage() {
                   <ShieldCheck className="h-3.5 w-3.5 text-hybrid" />
                 </div>
                 <div className="mt-1 font-mono text-xl font-bold text-hybrid">
-                  {(faithfulnessVal * 100).toFixed(0)}%
+                  {faithfulnessVal != null ? `${(faithfulnessVal * 100).toFixed(0)}%` : "--"}
                 </div>
                 <div className="mt-1 h-1 w-full rounded-full bg-ink-800 overflow-hidden">
                   <div
                     className="h-full bg-hybrid rounded-full transition-all"
-                    style={{ width: `${faithfulnessVal * 100}%` }}
+                    style={{ width: `${faithfulnessVal != null ? faithfulnessVal * 100 : 0}%` }}
                   />
                 </div>
                 <p className="mt-1 font-mono text-[9px] text-mist-400">Grounded Factuality</p>
@@ -885,7 +903,7 @@ export function QueryPage() {
                   <Clock className="h-3.5 w-3.5 text-ok" />
                 </div>
                 <div className="mt-1 font-mono text-xl font-bold text-mist-100">
-                  {Math.round(latencyVal)}ms
+                  {latencyVal != null ? `${Math.round(latencyVal)}ms` : "--"}
                 </div>
                 <div className="mt-1 flex items-center justify-between font-mono text-[9px] text-mist-400">
                   <span>{latestTurn?.cached ? "Cached Hit" : "Realtime"}</span>
@@ -894,6 +912,14 @@ export function QueryPage() {
                 <p className="mt-1 font-mono text-[9px] text-mist-400">End-to-End Latency</p>
               </div>
             </div>
+
+            {!evalRow && (
+              <div className="rounded border border-dashed border-ink-800 bg-ink-900/40 p-2 text-center">
+                <p className="font-mono text-[10px] text-mist-400">
+                  Baseline metrics appear after running an evaluation in the Eval dashboard.
+                </p>
+              </div>
+            )}
           </div>
 
           {/* Section: Retrieved Sources Inspector */}

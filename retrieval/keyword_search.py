@@ -45,12 +45,15 @@ class BM25KeywordSearchService:
         scores = bm25.get_scores(tokenized_query)
 
         # Normalize BM25 scores between 0 and 1 using max score
-        max_score = max(scores) if len(scores) > 0 and max(scores) > 0 else 1.0
+        max_score = float(max(scores)) if (len(scores) > 0 and max(scores) > 0) else 0.0
 
         results: List[SearchResult] = []
-        for c, score in zip(chunks, scores):
-            if score > 0:  # Only include matching chunks
-                norm_score = float(score / max_score)
+        for c, score, tokens in zip(chunks, scores, tokenized_corpus):
+
+            # Check direct token overlap for small corpus robustness
+            overlap_count = sum(1 for q in tokenized_query if q in tokens)
+            effective_score = float(score / max_score) if max_score > 0 else (0.5 if overlap_count > 0 else 0.0)
+            if score > 0 or overlap_count > 0:
                 results.append(
                     SearchResult(
                         chunk_id=c.id,
@@ -60,9 +63,10 @@ class BM25KeywordSearchService:
                         chunk_index=c.chunk_index,
                         page_number=c.page_number,
                         metadata={**(c.chunk_metadata or {}), "signal": "bm25"},
-                        score=norm_score,
+                        score=effective_score if effective_score > 0 else 0.5,
                     )
                 )
+
 
         results.sort(key=lambda x: x.score, reverse=True)
         return results[:top_k]

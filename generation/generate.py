@@ -376,18 +376,10 @@ class GenerationService:
                 )
                 seen_ids.add(chunk.chunk_id)
 
-        # 3. Fallback if no explicit citations parsed
-        if not citations and chunks:
-            citations.append(
-                Citation(
-                    chunk_id=chunks[0].chunk_id,
-                    filename=chunks[0].filename,
-                    page_number=chunks[0].page_number,
-                    snippet=chunks[0].content[:160] + "...",
-                )
-            )
-
+        # 3. No fallback: do NOT automatically assign first chunk when citations are missing.
+        # Preserves citation fidelity and prevents hallucinated attribution.
         return citations
+
 
     def generate_answer(
         self,
