@@ -172,6 +172,23 @@ Never assumes an LLM citation is accurate. Every claim in the synthesized answer
 | **Frontend** | React 18 + Vite | TypeScript, Tailwind CSS, TanStack Query | Embedded static mount |
 | **CI / CD** | GitHub Actions | Automated linting, pytest suite, and Vite build | Local scripts |
 
+### Execution Modes: Development vs. Production
+
+The architecture explicitly differentiates between local development and production environments:
+
+- **Development mode:**
+  - **Database & Vector Store:** SQLite fallback with in-memory cosine vector calculations (zero background services required).
+  - **Cache Layer:** Local in-memory cache with TTL and atomic index-version invalidation.
+  - **Embeddings & Models:** Local `sentence-transformers` embeddings (`bge-small-en-v1.5`) and Cross-Encoder (`ms-marco-MiniLM-L-6-v2`) on CPU.
+  - **Synthesis:** Offline extractive QA heuristic when external LLM API keys are omitted.
+  - **Setup:** Minimal setup (`pip install -r requirements.txt && uvicorn main:app`). Neither Docker, PostgreSQL, nor Redis are required for local development.
+
+- **Production mode:**
+  - **Database & Vector Store:** PostgreSQL 16 + `pgvector` with persistent HNSW indexing (`INDEX_TYPE=hnsw`) for sub-10ms similarity queries across large corpora.
+  - **Cache Layer:** Redis 7 distributed cache with atomic version keys for multi-instance scaling.
+  - **Embeddings & LLM:** Configurable cloud embedding and LLM providers (Google Gemini 1.5 Flash, Anthropic Claude 3.5 Sonnet, OpenAI).
+  - **Deployment:** Full Docker Compose support (`docker-compose.yml`) orchestrating PostgreSQL, Redis, FastAPI backend, and Nginx serving the React frontend.
+
 ---
 
 ## Getting Started
