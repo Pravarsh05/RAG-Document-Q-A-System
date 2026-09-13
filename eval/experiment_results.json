@@ -12,7 +12,9 @@
     "precision_at_5": 0.72,
     "mrr": 0.973,
     "ndcg_at_5": 0.955,
-    "avg_retrieval_latency_ms": 112.82
+    "avg_retrieval_latency_ms": 144.23,
+    "p50_retrieval_latency_ms": 29.69,
+    "p95_retrieval_latency_ms": 33.64
   },
   {
     "configuration": "BM25-Only (Lexical)",
@@ -27,7 +29,9 @@
     "precision_at_5": 0.652,
     "mrr": 0.946,
     "ndcg_at_5": 0.935,
-    "avg_retrieval_latency_ms": 7.86
+    "avg_retrieval_latency_ms": 7.98,
+    "p50_retrieval_latency_ms": 7.65,
+    "p95_retrieval_latency_ms": 10.43
   },
   {
     "configuration": "Hybrid (Vector + BM25 RRF k=60)",
@@ -42,7 +46,9 @@
     "precision_at_5": 0.718,
     "mrr": 0.98,
     "ndcg_at_5": 0.959,
-    "avg_retrieval_latency_ms": 129.91
+    "avg_retrieval_latency_ms": 146.43,
+    "p50_retrieval_latency_ms": 39.79,
+    "p95_retrieval_latency_ms": 47.3
   },
   {
     "configuration": "Hybrid + Cross-Encoder (ms-marco)",
@@ -57,7 +63,9 @@
     "precision_at_5": 0.704,
     "mrr": 0.977,
     "ndcg_at_5": 0.959,
-    "avg_retrieval_latency_ms": 700.24
+    "avg_retrieval_latency_ms": 776.79,
+    "p50_retrieval_latency_ms": 436.24,
+    "p95_retrieval_latency_ms": 710.72
   },
   {
     "configuration": "Optimized Hybrid + Rerank + Query Rewriter",
@@ -72,6 +80,8 @@
     "precision_at_5": 0.722,
     "mrr": 0.957,
     "ndcg_at_5": 0.951,
-    "avg_retrieval_latency_ms": 952.67
+    "avg_retrieval_latency_ms": 945.02,
+    "p50_retrieval_latency_ms": 797.56,
+    "p95_retrieval_latency_ms": 872.21
   }
 ]

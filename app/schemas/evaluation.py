@@ -9,6 +9,8 @@ class EvalRow(BaseModel):
     faithfulness: float
     relevance: float
     avgLatencyMs: float
+    p50LatencyMs: Optional[float] = None
+    p95LatencyMs: Optional[float] = None
     # Extended metrics
     recallAt1: Optional[float] = None
     recallAt3: Optional[float] = None

@@ -205,7 +205,7 @@ export function EvalPage() {
                   <th className="py-3 px-2 font-medium text-right">Faithful</th>
                   <th className="py-3 px-2 font-medium text-right">Cite OK</th>
                   <th className="py-3 px-2 font-medium text-right">Refusal</th>
-                  <th className="py-3 px-3 font-medium text-right">Avg Latency</th>
+                  <th className="py-3 px-3 font-medium text-right">Latency (Avg / P50 / P95)</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-ink-850">
@@ -236,8 +236,14 @@ export function EvalPage() {
                     <td className="py-3 px-2 font-mono text-xs text-right text-mist-300">
                       {row.refusalAccuracy != null ? `${(row.refusalAccuracy * 100).toFixed(0)}%` : "--"}
                     </td>
-                    <td className="py-3 px-3 font-mono text-xs text-right text-mist-400">
-                      {row.avgLatencyMs ? `${row.avgLatencyMs}ms` : "--"}
+                    <td className="py-3 px-3 font-mono text-xs text-right text-mist-300 whitespace-nowrap">
+                      {row.avgLatencyMs
+                        ? row.p50LatencyMs != null && row.p95LatencyMs != null
+                          ? `${row.avgLatencyMs}ms / ${row.p50LatencyMs}ms / ${row.p95LatencyMs}ms`
+                          : row.p95LatencyMs != null
+                          ? `${row.avgLatencyMs}ms / ${row.p95LatencyMs}ms`
+                          : `${row.avgLatencyMs}ms`
+                        : "--"}
                     </td>
                   </tr>
                 ))}

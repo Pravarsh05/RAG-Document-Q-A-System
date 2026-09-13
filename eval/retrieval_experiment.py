@@ -3,6 +3,7 @@ import sys
 import json
 import time
 import logging
+import numpy as np
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
@@ -122,6 +123,8 @@ def run_retrieval_experiment(limit: int = None):
             latencies.append(elapsed_ms)
 
         n = len(dataset) or 1
+        p50 = round(float(np.percentile(latencies, 50)), 2) if latencies else 0.0
+        p95 = round(float(np.percentile(latencies, 95)), 2) if latencies else 0.0
         res = {
             "configuration": cfg["name"],
             "pipeline": cfg["pipeline"],
@@ -136,6 +139,8 @@ def run_retrieval_experiment(limit: int = None):
             "mrr": round(sum(mrrs) / n, 3),
             "ndcg_at_5": round(sum(ndcgs_5) / n, 3),
             "avg_retrieval_latency_ms": round(sum(latencies) / n, 2),
+            "p50_retrieval_latency_ms": p50,
+            "p95_retrieval_latency_ms": p95,
         }
         experiment_results.append(res)
 
@@ -143,17 +148,18 @@ def run_retrieval_experiment(limit: int = None):
     with open(out_file, "w", encoding="utf-8") as f:
         json.dump(experiment_results, f, indent=2)
 
-    print("\n" + "=" * 88)
+    print("\n" + "=" * 105)
     print("                EMPIRICAL RETRIEVAL OPTIMIZATION EXPERIMENT")
-    print("=" * 88)
-    print("\n| Architecture Configuration | Recall@1 | Recall@5 | Precision@5 | MRR | nDCG@5 | Latency |")
-    print("|---|---|---|---|---|---|---|")
+    print("=" * 105)
+    print("\n| Architecture Configuration | Recall@1 | Recall@5 | Precision@5 | MRR | nDCG@5 | Avg Latency | P50 Latency | P95 Latency |")
+    print("|---|---|---|---|---|---|---|---|---|")
     for r in experiment_results:
         print(
             f"| {r['configuration']:<42} | {r['recall_at_1']:.2f} | {r['recall_at_5']:.2f} | "
-            f"{r['precision_at_5']:.2f} | {r['mrr']:.3f} | {r['ndcg_at_5']:.3f} | {r['avg_retrieval_latency_ms']:.1f}ms |"
+            f"{r['precision_at_5']:.2f} | {r['mrr']:.3f} | {r['ndcg_at_5']:.3f} | "
+            f"{r['avg_retrieval_latency_ms']:.1f}ms | {r['p50_retrieval_latency_ms']:.1f}ms | {r['p95_retrieval_latency_ms']:.1f}ms |"
         )
-    print("\n" + "=" * 88 + "\n")
+    print("\n" + "=" * 105 + "\n")
     return experiment_results
 
 

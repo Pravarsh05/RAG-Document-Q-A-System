@@ -8,6 +8,7 @@ from datetime import datetime, timezone
 from typing import List, Dict, Any, Optional
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+import numpy as np
 
 from app.core.config import settings
 from db.database import Base
@@ -187,6 +188,8 @@ class EvaluationService:
                 latencies.append(elapsed_ms)
 
             n = len(dataset) or 1
+            p50 = round(float(np.percentile(latencies, 50)), 1) if latencies else 0.0
+            p95 = round(float(np.percentile(latencies, 95)), 1) if latencies else 0.0
             row = EvalRow(
                 pipeline=name_map.get(pipe, pipe),
                 precisionAt5=round(sum(precisions_5) / n, 2),
@@ -194,6 +197,8 @@ class EvaluationService:
                 faithfulness=round(sum(faithfulness_scores) / n, 2),
                 relevance=round(sum(relevance_scores) / n, 2),
                 avgLatencyMs=round(sum(latencies) / n, 1),
+                p50LatencyMs=p50,
+                p95LatencyMs=p95,
                 recallAt1=round(sum(recalls_1) / n, 2),
                 recallAt3=round(sum(recalls_3) / n, 2),
                 mrr=round(sum(mrrs) / n, 3),

@@ -27,7 +27,7 @@ jobs:
 
       - name: Run Test Suite
         run: |
-          pytest tests/test_query_rewriter.py tests/test_citation_verifier.py tests/test_cache_service.py tests/test_evaluation_metrics.py tests/test_security_and_validation.py tests/test_chunking.py tests/test_loaders.py tests/test_generation.py -v
+          pytest -v
 
   frontend-build:
     name: Frontend TypeScript Verification & Production Build

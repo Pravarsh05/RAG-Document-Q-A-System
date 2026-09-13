@@ -52,3 +52,18 @@ rag-frontend/dist/
 rag-frontend/.pytest_cache/
 *.tsbuildinfo
 
+# IDE & Editor Artifacts
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Agent Tooling & Local IDE Skills
+.agents/
+.codex/
+.impeccable/
+
+# OS Artifacts
+.DS_Store
+Thumbs.db
+

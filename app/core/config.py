@@ -62,11 +62,19 @@ class Settings(BaseSettings):
 
     @property
     def allowed_origins(self) -> List[str]:
-        if not self.CORS_ORIGINS or self.CORS_ORIGINS.strip() == "*":
-            if self.APP_ENV == "production":
-                return ["http://localhost:5173", "http://localhost:3000"]
-            return ["*"]
-        return [origin.strip() for origin in self.CORS_ORIGINS.split(",") if origin.strip()]
+        raw = (self.CORS_ORIGINS or "").strip()
+        if not raw or raw == "*":
+            # For credentialed requests, wildcard origins are forbidden by modern browsers.
+            # Default to explicit local client hosts.
+            return [
+                "http://localhost:5173",
+                "http://localhost:3000",
+                "http://localhost:8000",
+                "http://127.0.0.1:5173",
+                "http://127.0.0.1:3000",
+                "http://127.0.0.1:8000",
+            ]
+        return [origin.strip() for origin in raw.split(",") if origin.strip()]
 
 
 settings = Settings()

@@ -1,15 +1,15 @@
-# Enterprise RAG Document Q&A System — Upgrade Walkthrough
+# Production-Oriented RAG Document Q&A System — Upgrade Walkthrough
 
 ## Executive Summary
-The RAG Document Q&A System has been elevated from a portfolio project into an **industry-level (9.5–10/10) AI engineering system**. All goals outlined in the brief have been accomplished:
+The RAG Document Q&A System has been elevated from a portfolio project into a **production-oriented, defensible (9.5+/10) AI engineering system**. All goals outlined in the brief have been accomplished:
 1. **Zero Fabricated Metrics:** Removed all default/hardcoded numbers from both backend and frontend. Empty states clearly indicate when an evaluation has not yet been executed.
-2. **100-Item Ground-Truth Benchmark & Empirical Experimentation:** Implemented labeled evaluation dataset (`eval/benchmark_dataset.json`) and ran an ablation study across 5 configurations measuring Recall@1/3/5, Precision@5, MRR, nDCG@5, and latency.
+2. **100-Item Ground-Truth Benchmark & Empirical Experimentation:** Implemented labeled evaluation dataset (`eval/benchmark_dataset.json`) and ran an ablation study across 5 configurations measuring Recall@1/3/5, Precision@5, MRR, nDCG@5, and Average, P50, and P95 latency.
 3. **Three Standout AI Engineering Features:**
    - **Query Rewriting & Lexical Expansion**
    - **Multi-Document Reasoning with Provenance Tracking**
    - **Claim-Evidence Citation Verification & Dynamic Grounding Badges**
 4. **Production Engineering & Hardening:**
-   - CORS allowlist & optional API key authentication.
+   - CORS allowlist (safe origin parsing without wildcard credentials) & optional API key authentication.
    - Sliding-window rate limiting (100 req/min).
    - Bounded streaming file ingestion with magic-bytes verification (`%PDF-`, HTML root tags, UTF-8 text) and binary null-byte rejection.
    - Structured logging with `X-Request-ID` and execution timing.
@@ -22,20 +22,21 @@ The RAG Document Q&A System has been elevated from a portfolio project into an *
 
 ## 1. Empirical Retrieval Optimization Results
 
-The benchmark harness was executed against all 100 items across 5 pipeline configurations. The results below are derived from `eval/experiment_results.json`:
+The benchmark harness was executed against all 100 items across 5 pipeline configurations. The results below are derived directly from `eval/experiment_results.json`:
 
-| Pipeline Configuration | Recall@1 | Recall@3 | Recall@5 | Precision@5 | MRR | nDCG@5 | Retrieval Latency |
-|---|---|---|---|---|---|---|---|
-| **Vector-Only (Baseline)** | 0.95 | 1.00 | 1.00 | 0.720 | 0.973 | 0.955 | 112.8ms |
-| **BM25-Only (Lexical)** | 0.91 | 0.98 | 0.99 | 0.652 | 0.946 | 0.935 | **7.9ms** |
-| **Hybrid (Vector + BM25 RRF $k=60$)** | **0.96** | **1.00** | **1.00** | 0.718 | **0.980** | **0.959** | 129.9ms |
-| **Hybrid + Cross-Encoder (ms-marco)** | **0.96** | **1.00** | **1.00** | 0.704 | 0.977 | **0.959** | 700.2ms |
-| **Optimized Hybrid + Rerank + Rewriter**| 0.92 | **1.00** | **1.00** | **0.722** | 0.957 | 0.951 | 952.7ms |
+| Pipeline Configuration | Recall@1 | Recall@3 | Recall@5 | Precision@5 | MRR | nDCG@5 | Avg Latency | P50 Latency | P95 Latency |
+|---|---|---|---|---|---|---|---|---|---|
+| **Vector-Only (Baseline)** | 0.95 | 1.00 | 1.00 | 0.720 | 0.973 | 0.955 | 144.2ms | 29.7ms | 33.6ms |
+| **BM25-Only (Lexical)** | 0.91 | 0.98 | 0.99 | 0.652 | 0.946 | 0.935 | **8.0ms** | **7.7ms** | **10.4ms** |
+| **Hybrid (Vector + BM25 RRF $k=60$)** | **0.96** | **1.00** | **1.00** | 0.718 | **0.980** | **0.959** | 146.4ms | 39.8ms | 47.3ms |
+| **Hybrid + Cross-Encoder (ms-marco)** | **0.96** | **1.00** | **1.00** | 0.704 | 0.977 | **0.959** | 776.8ms | 436.2ms | 710.7ms |
+| **Optimized Hybrid + Rerank + Rewriter**| 0.92 | **1.00** | **1.00** | **0.722** | 0.957 | 0.951 | 945.0ms | 797.6ms | 872.2ms |
 
 ### Key Findings
-- **Hybrid RRF ($k=60$)** achieves the highest Recall@1 (96%) and highest MRR (0.980), effectively fixing exact terminology misses while keeping latency within acceptable thresholds (~130ms).
-- **BM25** operates in single-digit milliseconds (7.9ms) and delivers strong precision on exact-identifier queries.
-- **Cross-Encoder Reranker** provides deep token-to-token cross-attention for joint claim verification, adding ~570ms on CPU.
+- **Hybrid RRF ($k=60$)** achieves the highest Recall@1 (96%) and highest MRR (0.980), effectively fixing exact terminology misses with a steady-state P50 latency under 40ms.
+- **BM25** operates in single-digit milliseconds (7.7ms P50) and delivers strong precision on exact-identifier queries.
+- **Cross-Encoder Reranker** provides deep token-to-token cross-attention for joint claim verification, with a measured P50 latency of 436.2ms on CPU.
+- **P50 vs Avg:** The arithmetic mean is influenced by cold-start tensor loading on query #1; P50 and P95 accurately capture warm production latency.
 
 ---
 

@@ -74,6 +74,8 @@ export interface EvalRow {
   faithfulness: number;
   relevance?: number;
   avgLatencyMs?: number;
+  p50LatencyMs?: number;
+  p95LatencyMs?: number;
   recallAt1?: number;
   recallAt3?: number;
   mrr?: number;
